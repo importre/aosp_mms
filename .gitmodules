@@ -1,0 +1,12 @@
+[submodule "deps/external/libphonenumber"]
+	path = deps/external/libphonenumber
+	url = https://github.com/importre/platform_external_libphonenumber
+[submodule "deps/frameworks/ex"]
+	path = deps/frameworks/ex
+	url = https://github.com/importre/platform_frameworks_ex
+[submodule "deps/frameworks/opt/mms"]
+	path = deps/frameworks/opt/mms
+	url = https://github.com/importre/platform_frameworks_opt_mms
+[submodule "deps/frameworks/base"]
+	path = deps/frameworks/base
+	url = https://github.com/importre/platform_frameworks_base
