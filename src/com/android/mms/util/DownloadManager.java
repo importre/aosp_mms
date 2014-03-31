@@ -28,15 +28,12 @@ import android.database.Cursor;
 import android.database.sqlite.SqliteWrapper;
 import android.net.Uri;
 import android.os.Handler;
-import android.os.SystemProperties;
 import android.preference.PreferenceManager;
 import android.provider.Telephony.Mms;
-import android.telephony.ServiceState;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.android.internal.telephony.TelephonyIntents;
-import com.android.internal.telephony.TelephonyProperties;
 import com.android.mms.R;
 import com.android.mms.data.Contact;
 import com.android.mms.ui.MessagingPreferenceActivity;
@@ -94,8 +91,8 @@ public class DownloadManager {
                     Log.v(TAG, "Service state changed: " + intent.getExtras());
                 }
 
-                ServiceState state = ServiceState.newFromBundle(intent.getExtras());
-                boolean isRoaming = state.getRoaming();
+                // TODO: should be restored
+                boolean isRoaming = false;
                 if (LOCAL_LOGV) {
                     Log.v(TAG, "roaming ------> " + isRoaming);
                 }
@@ -177,13 +174,8 @@ public class DownloadManager {
     }
 
     static boolean isRoaming() {
-        // TODO: fix and put in Telephony layer
-        String roaming = SystemProperties.get(
-                TelephonyProperties.PROPERTY_OPERATOR_ISROAMING, null);
-        if (LOCAL_LOGV) {
-            Log.v(TAG, "roaming ------> " + roaming);
-        }
-        return "true".equals(roaming);
+        // TODO: should be restored
+        return false;
     }
 
     public void markState(final Uri uri, int state) {

@@ -16,26 +16,6 @@
 
 package android.telephony;
 
-import com.android.i18n.phonenumbers.NumberParseException;
-import com.android.i18n.phonenumbers.PhoneNumberUtil;
-import com.android.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
-import com.android.i18n.phonenumbers.Phonenumber.PhoneNumber;
-import com.android.i18n.phonenumbers.ShortNumberUtil;
-
-import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
-import android.location.CountryDetector;
-import android.net.Uri;
-import android.os.SystemProperties;
-import android.provider.Contacts;
-import android.provider.ContactsContract;
-import android.text.Editable;
-import android.text.SpannableStringBuilder;
-import android.text.TextUtils;
-import android.telephony.Rlog;
-import android.util.SparseIntArray;
-
 import static com.android.internal.telephony.TelephonyProperties.PROPERTY_ICC_OPERATOR_ISO_COUNTRY;
 import static com.android.internal.telephony.TelephonyProperties.PROPERTY_IDP_STRING;
 import static com.android.internal.telephony.TelephonyProperties.PROPERTY_OPERATOR_ISO_COUNTRY;
@@ -43,6 +23,20 @@ import static com.android.internal.telephony.TelephonyProperties.PROPERTY_OPERAT
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import android.content.Context;
+import android.text.Editable;
+import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
+import android.util.Log;
+import android.util.SparseIntArray;
+
+import com.android.i18n.phonenumbers.NumberParseException;
+import com.android.i18n.phonenumbers.PhoneNumberUtil;
+import com.android.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
+import com.android.i18n.phonenumbers.Phonenumber.PhoneNumber;
+import com.android.i18n.phonenumbers.ShortNumberUtil;
+import com.android.mms.transaction.Utils;
 
 /**
  * Various utilities for dealing with phone number strings.
@@ -138,66 +132,6 @@ public class PhoneNumberUtils
     /** Returns true if ch is not dialable or alpha char */
     private static boolean isSeparator(char ch) {
         return !isDialable(ch) && !(('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z'));
-    }
-
-    /** Extracts the phone number from an Intent.
-     *
-     * @param intent the intent to get the number of
-     * @param context a context to use for database access
-     *
-     * @return the phone number that would be called by the intent, or
-     *         <code>null</code> if the number cannot be found.
-     */
-    public static String getNumberFromIntent(Intent intent, Context context) {
-        String number = null;
-
-        Uri uri = intent.getData();
-
-        if (uri == null) {
-            return null;
-        }
-
-        String scheme = uri.getScheme();
-
-        if (scheme.equals("tel") || scheme.equals("sip")) {
-            return uri.getSchemeSpecificPart();
-        }
-
-        // TODO: We don't check for SecurityException here (requires
-        // CALL_PRIVILEGED permission).
-        if (scheme.equals("voicemail")) {
-            return TelephonyManager.getDefault().getCompleteVoiceMailNumber();
-        }
-
-        if (context == null) {
-            return null;
-        }
-
-        String type = intent.resolveType(context);
-        String phoneColumn = null;
-
-        // Correctly read out the phone entry based on requested provider
-        final String authority = uri.getAuthority();
-        if (Contacts.AUTHORITY.equals(authority)) {
-            phoneColumn = Contacts.People.Phones.NUMBER;
-        } else if (ContactsContract.AUTHORITY.equals(authority)) {
-            phoneColumn = ContactsContract.CommonDataKinds.Phone.NUMBER;
-        }
-
-        final Cursor c = context.getContentResolver().query(uri, new String[] {
-            phoneColumn
-        }, null, null, null);
-        if (c != null) {
-            try {
-                if (c.moveToFirst()) {
-                    number = c.getString(c.getColumnIndex(phoneColumn));
-                }
-            } finally {
-                c.close();
-            }
-        }
-
-        return number;
     }
 
     /** Extracts the network address portion and canonicalizes
@@ -358,7 +292,7 @@ public class PhoneNumberUtils
     }
 
     private static void log(String msg) {
-        Rlog.d(LOG_TAG, msg);
+        Log.d(LOG_TAG, msg);
     }
     /** index of the last character of the network portion
      *  (eg anything after is a post-dial string)
@@ -419,17 +353,6 @@ public class PhoneNumberUtils
         // We've used loose comparation at least Eclair, which may change in the future.
 
         return compare(a, b, false);
-    }
-
-    /**
-     * Compare phone numbers a and b, and return true if they're identical
-     * enough for caller ID purposes. Checks a resource to determine whether
-     * to use a strict or loose comparison algorithm.
-     */
-    public static boolean compare(Context context, String a, String b) {
-        boolean useStrict = context.getResources().getBoolean(
-               com.android.internal.R.bool.config_use_strict_phone_number_comparation);
-        return compare(a, b, useStrict);
     }
 
     /**
@@ -1690,10 +1613,10 @@ public class PhoneNumberUtils
 
         // retrieve the list of emergency numbers
         // check read-write ecclist property first
-        String numbers = SystemProperties.get("ril.ecclist");
+        String numbers = Utils.getSystemProp("ril.ecclist");
         if (TextUtils.isEmpty(numbers)) {
             // then read-only ecclist property since old RIL only uses this
-            numbers = SystemProperties.get("ro.ril.ecclist");
+            numbers = Utils.getSystemProp("ro.ril.ecclist");
         }
 
         if (!TextUtils.isEmpty(numbers)) {
@@ -1716,7 +1639,7 @@ public class PhoneNumberUtils
             return false;
         }
 
-        Rlog.d(LOG_TAG, "System property doesn't provide any emergency numbers."
+        Log.d(LOG_TAG, "System property doesn't provide any emergency numbers."
                 + " Use embedded logic for determining ones.");
 
         // No ecclist system property, so use our own list.
@@ -1802,17 +1725,10 @@ public class PhoneNumberUtils
     private static boolean isLocalEmergencyNumberInternal(String number,
                                                           Context context,
                                                           boolean useExactMatch) {
-        String countryIso;
-        CountryDetector detector = (CountryDetector) context.getSystemService(
-                Context.COUNTRY_DETECTOR);
-        if (detector != null && detector.detectCountry() != null) {
-            countryIso = detector.detectCountry().getCountryIso();
-        } else {
-            Locale locale = context.getResources().getConfiguration().locale;
-            countryIso = locale.getCountry();
-            Rlog.w(LOG_TAG, "No CountryDetector; falling back to countryIso based on locale: "
-                    + countryIso);
-        }
+        Locale locale = context.getResources().getConfiguration().locale;
+        String countryIso = locale.getCountry();
+        Log.w(LOG_TAG, "No CountryDetector; falling back to countryIso based on locale: "
+                + countryIso);
         return isEmergencyNumberInternal(number, countryIso, useExactMatch);
     }
 
@@ -1828,21 +1744,7 @@ public class PhoneNumberUtils
      * @hide TODO: pending API Council approval
      */
     public static boolean isVoiceMailNumber(String number) {
-        String vmNumber;
-
-        try {
-            vmNumber = TelephonyManager.getDefault().getVoiceMailNumber();
-        } catch (SecurityException ex) {
-            return false;
-        }
-
-        // Strip the separators from the number before comparing it
-        // to the list.
-        number = extractNetworkPortionAlt(number);
-
-        // compare tolerates null so we need to make sure that we
-        // don't return true when both are null.
-        return !TextUtils.isEmpty(number) && compare(number, vmNumber);
+        return false;
     }
 
     /**
@@ -1944,8 +1846,8 @@ public class PhoneNumberUtils
         if (!TextUtils.isEmpty(dialStr)) {
             if (isReallyDialable(dialStr.charAt(0)) &&
                 isNonSeparator(dialStr)) {
-                String currIso = SystemProperties.get(PROPERTY_OPERATOR_ISO_COUNTRY, "");
-                String defaultIso = SystemProperties.get(PROPERTY_ICC_OPERATOR_ISO_COUNTRY, "");
+                String currIso = Utils.getSystemProp(PROPERTY_OPERATOR_ISO_COUNTRY, "");
+                String defaultIso = Utils.getSystemProp(PROPERTY_ICC_OPERATOR_ISO_COUNTRY, "");
                 if (!TextUtils.isEmpty(currIso) && !TextUtils.isEmpty(defaultIso)) {
                     return cdmaCheckAndProcessPlusCodeByNumberFormat(dialStr,
                             getFormatTypeFromCountryCode(currIso),
@@ -1967,7 +1869,7 @@ public class PhoneNumberUtils
     public static String cdmaCheckAndProcessPlusCodeForSms(String dialStr) {
         if (!TextUtils.isEmpty(dialStr)) {
             if (isReallyDialable(dialStr.charAt(0)) && isNonSeparator(dialStr)) {
-                String defaultIso = SystemProperties.get(PROPERTY_ICC_OPERATOR_ISO_COUNTRY, "");
+                String defaultIso = Utils.getSystemProp(PROPERTY_ICC_OPERATOR_ISO_COUNTRY, "");
                 if (!TextUtils.isEmpty(defaultIso)) {
                     int format = getFormatTypeFromCountryCode(defaultIso);
                     return cdmaCheckAndProcessPlusCodeByNumberFormat(dialStr, format, format);
@@ -2041,7 +1943,7 @@ public class PhoneNumberUtils
                         // This should never happen since we checked the if dialStr is null
                         // and if it contains the plus sign in the beginning of this function.
                         // The plus sign is part of the network portion.
-                        Rlog.e("checkAndProcessPlusCode: null newDialStr", networkDialStr);
+                        Log.e("checkAndProcessPlusCode: null newDialStr", networkDialStr);
                         return dialStr;
                     }
                     postDialStr = extractPostDialPortion(tempDialStr);
@@ -2061,7 +1963,7 @@ public class PhoneNumberUtils
                             if (dialableIndex < 0) {
                                 postDialStr = "";
                             }
-                            Rlog.e("wrong postDialStr=", postDialStr);
+                            Log.e("wrong postDialStr=", postDialStr);
                         }
                     }
                     if (DBG) log("checkAndProcessPlusCode,postDialStr=" + postDialStr);
@@ -2070,7 +1972,7 @@ public class PhoneNumberUtils
                 // TODO: Support NANP international conversion and other telephone numbering plans.
                 // Currently the phone is never used in non-NANP system, so return the original
                 // dial string.
-                Rlog.e("checkAndProcessPlusCode:non-NANP not supported", dialStr);
+                Log.e("checkAndProcessPlusCode:non-NANP not supported", dialStr);
             }
         }
         return retStr;
@@ -2079,7 +1981,7 @@ public class PhoneNumberUtils
     // This function gets the default international dialing prefix
     private static String getDefaultIdp( ) {
         String ps = null;
-        SystemProperties.get(PROPERTY_IDP_STRING, ps);
+        ps = Utils.getSystemProp(PROPERTY_IDP_STRING, ps);
         if (TextUtils.isEmpty(ps)) {
             ps = NANP_IDP_STRING;
         }
@@ -2129,7 +2031,7 @@ public class PhoneNumberUtils
                 }
             }
         } else {
-            Rlog.e("isNanp: null dialStr passed in", dialStr);
+            Log.e("isNanp: null dialStr passed in", dialStr);
         }
         return retVal;
     }
@@ -2145,7 +2047,7 @@ public class PhoneNumberUtils
                 retVal = true;
             }
         } else {
-            Rlog.e("isOneNanp: null dialStr passed in", dialStr);
+            Log.e("isOneNanp: null dialStr passed in", dialStr);
         }
         return retVal;
     }
@@ -2184,7 +2086,7 @@ public class PhoneNumberUtils
             delimiterIndex = number.indexOf("%40");
         }
         if (delimiterIndex < 0) {
-            Rlog.w(LOG_TAG,
+            Log.w(LOG_TAG,
                   "getUsernameFromUriNumber: no delimiter found in SIP addr '" + number + "'");
             delimiterIndex = number.length();
         }

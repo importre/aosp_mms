@@ -219,7 +219,7 @@ public abstract class Transaction extends Observable {
                 throw new IOException("Cannot establish route for " + url +
                                       ": Unknown proxy " + proxyAddr);
             }
-            if (!connMgr.requestRouteToHostAddress(ConnectivityManager.TYPE_MOBILE_MMS, inetAddr)) {
+            if (!Utils.requestRouteToHostAddress(connMgr, ConnectivityManager.TYPE_MOBILE_MMS, inetAddr)) {
                 throw new IOException("Cannot establish route to proxy " + inetAddr);
             }
         } else {
@@ -229,7 +229,7 @@ public abstract class Transaction extends Observable {
             } catch (UnknownHostException e) {
                 throw new IOException("Cannot establish route for " + url + ": Unknown host");
             }
-            if (!connMgr.requestRouteToHostAddress(ConnectivityManager.TYPE_MOBILE_MMS, inetAddr)) {
+            if (!Utils.requestRouteToHostAddress(connMgr, ConnectivityManager.TYPE_MOBILE_MMS, inetAddr)) {
                 throw new IOException("Cannot establish route to " + inetAddr + " for " + url);
             }
         }

@@ -18,8 +18,6 @@ package com.android.mms.data;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -44,8 +42,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 
-import com.android.common.contacts.DataUsageStatUpdater;
-import com.android.common.userhappiness.UserHappinessSignals;
 import com.android.mms.ContentRestrictionException;
 import com.android.mms.ExceedMessageSizeException;
 import com.android.mms.LogTag;
@@ -1252,11 +1248,7 @@ public class WorkingMessage {
 
     // Be sure to only call this on a background thread.
     private void updateSendStats(final Conversation conv) {
-        String[] dests = conv.getRecipients().getNumbers();
-        final ArrayList<String> phoneNumbers = new ArrayList<String>(Arrays.asList(dests));
-
-        DataUsageStatUpdater updater = new DataUsageStatUpdater(mActivity);
-        updater.updateWithPhoneNumber(phoneNumbers);
+        // don't care
     }
 
     private boolean addressContainsEmailToMms(Conversation conv, String text) {
@@ -1282,9 +1274,6 @@ public class WorkingMessage {
     // Message sending stuff
 
     private void preSendSmsWorker(Conversation conv, String msgText, String recipientsInUI) {
-        // If user tries to send the message, it's a signal the inputted text is what they wanted.
-        UserHappinessSignals.userAcceptedImeText(mActivity);
-
         mStatusListener.onPreMessageSent();
 
         long origThreadId = conv.getThreadId();
@@ -1397,10 +1386,6 @@ public class WorkingMessage {
                         values);
             }
             mStatusListener.onMessageSent();
-
-            // If user tries to send the message, it's a signal the inputted text is
-            // what they wanted.
-            UserHappinessSignals.userAcceptedImeText(mActivity);
 
             // First make sure we don't have too many outstanding unsent message.
             cursor = SqliteWrapper.query(mActivity, mContentResolver,

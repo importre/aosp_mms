@@ -224,7 +224,7 @@ public class SmsReceiverService extends Service {
 
     private void handleServiceStateChanged(Intent intent) {
         // If service just returned, start sending out the queued messages
-        ServiceState serviceState = ServiceState.newFromBundle(intent.getExtras());
+        ServiceState serviceState = Utils.newFromBundle(intent.getExtras());
         if (serviceState.getState() == ServiceState.STATE_IN_SERVICE) {
             sendFirstQueuedMessage();
         }

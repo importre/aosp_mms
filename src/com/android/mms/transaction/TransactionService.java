@@ -202,7 +202,7 @@ public class TransactionService extends Service implements Observer {
 
     public void onNewIntent(Intent intent, int serviceId) {
         mConnMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (mConnMgr == null || !mConnMgr.getMobileDataEnabled()
+        if (mConnMgr == null || !Utils.mobileDataEnabled(mConnMgr)
                 || !MmsConfig.isSmsEnabled(getApplicationContext())) {
             endMmsConnectivity();
             stopSelf(serviceId);
@@ -944,7 +944,7 @@ public class TransactionService extends Service implements Observer {
 
             NetworkInfo mmsNetworkInfo = null;
 
-            if (mConnMgr != null && mConnMgr.getMobileDataEnabled()) {
+            if (mConnMgr != null && Utils.mobileDataEnabled(mConnMgr)) {
                 mmsNetworkInfo = mConnMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE_MMS);
             } else {
                 if (Log.isLoggable(LogTag.TRANSACTION, Log.VERBOSE)) {

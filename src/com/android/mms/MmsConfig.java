@@ -31,6 +31,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.internal.telephony.TelephonyProperties;
+import com.android.mms.transaction.Utils;
 import com.android.mms.ui.MessageUtils;
 import com.android.mms.ui.MessagingPreferenceActivity;
 
@@ -118,7 +119,7 @@ public class MmsConfig {
         }
         // Always put the mnc/mcc in the log so we can tell which mms_config.xml was loaded.
         Log.v(TAG, "mnc/mcc: " +
-                android.os.SystemProperties.get(TelephonyProperties.PROPERTY_ICC_OPERATOR_NUMERIC));
+                Utils.getSystemProp(TelephonyProperties.PROPERTY_ICC_OPERATOR_NUMERIC));
 
         loadMmsSettings(context);
     }

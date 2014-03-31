@@ -10,3 +10,9 @@
 [submodule "deps/frameworks/base"]
 	path = deps/frameworks/base
 	url = https://github.com/importre/platform_frameworks_base
+[submodule "deps/frameworks/opt/telephony"]
+	path = deps/frameworks/opt/telephony
+	url = https://github.com/importre/platform_frameworks_opt_telephony
+[submodule "deps/external/jrs305"]
+	path = deps/external/jrs305
+	url = https://android.googlesource.com/platform/external/jsr305

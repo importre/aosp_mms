@@ -17,6 +17,8 @@
 
 package com.android.mms.transaction;
 
+import java.lang.reflect.Method;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -67,7 +69,8 @@ public class MmsSystemEventReceiver extends BroadcastReceiver {
                 mConnMgr = (ConnectivityManager) context
                         .getSystemService(Context.CONNECTIVITY_SERVICE);
             }
-            if (!mConnMgr.getMobileDataEnabled()) {
+
+            if (!Utils.mobileDataEnabled(mConnMgr)) {
                 if (Log.isLoggable(LogTag.TRANSACTION, Log.VERBOSE)) {
                     Log.v(TAG, "mobile data turned off, bailing");
                 }
