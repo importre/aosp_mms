@@ -48,13 +48,16 @@ public class BasicSlideEditorView extends LinearLayout implements
     private EditText mEditText;
     private boolean mOnTextChangedListenerEnabled = true;
     private OnTextChangedListener mOnTextChangedListener;
+    private Context mContext;
 
     public BasicSlideEditorView(Context context) {
         super(context);
+        mContext = context;
     }
 
     public BasicSlideEditorView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mContext = context;
     }
 
     @Override

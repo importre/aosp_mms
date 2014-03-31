@@ -71,7 +71,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
-import android.os.SystemProperties;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.QuickContact;
 import android.provider.Telephony;
@@ -135,6 +134,7 @@ import com.android.mms.drm.DrmUtils;
 import com.android.mms.model.SlideModel;
 import com.android.mms.model.SlideshowModel;
 import com.android.mms.transaction.MessagingNotification;
+import com.android.mms.transaction.Utils;
 import com.android.mms.ui.MessageListView.OnSizeChangedListener;
 import com.android.mms.ui.MessageUtils.ResizeImageResultCallback;
 import com.android.mms.ui.RecipientsEditor.RecipientContextMenuInfo;
@@ -624,7 +624,7 @@ public class ComposeMessageActivity extends Activity
         // The camera and other activities take a long time to hide the keyboard so we pre-hide
         // it here. However, if we're opening up the quick contact window while typing, don't
         // mess with the keyboard.
-        if (mIsKeyboardOpen && !QuickContact.ACTION_QUICK_CONTACT.equals(intent.getAction())) {
+        if (mIsKeyboardOpen && !"com.android.contacts.action.QUICK_CONTACT".equals(intent.getAction())) {
             hideKeyboard();
         }
 
@@ -3035,7 +3035,7 @@ public class ComposeMessageActivity extends Activity
         // The EXTRA_PHONE_URIS stores the phone's urls that were selected by user in the
         // multiple phone picker.
         final Parcelable[] uris =
-            data.getParcelableArrayExtra(Intents.EXTRA_PHONE_URIS);
+            data.getParcelableArrayExtra("com.android.contacts.extra.PHONE_URIS");
 
         final int recipientCount = uris != null ? uris.length : 0;
 
@@ -3391,7 +3391,7 @@ public class ComposeMessageActivity extends Activity
     }
 
     private void launchMultiplePhonePicker() {
-        Intent intent = new Intent(Intents.ACTION_GET_MULTIPLE_PHONES);
+        Intent intent = new Intent("com.android.contacts.action.GET_MULTIPLE_PHONES");
         intent.addCategory("android.intent.category.DEFAULT");
         intent.setType(Phone.CONTENT_TYPE);
         // We have to wait for the constructing complete.
@@ -3405,7 +3405,7 @@ public class ComposeMessageActivity extends Activity
             }
         }
         if (urisCount > 0) {
-            intent.putExtra(Intents.EXTRA_PHONE_URIS, uris);
+            intent.putExtra("com.android.contacts.extra.PHONE_URIS", uris);
         }
         startActivityForResult(intent, REQUEST_CODE_PICK);
     }
@@ -3722,7 +3722,7 @@ public class ComposeMessageActivity extends Activity
     private void sendMessage(boolean bCheckEcmMode) {
         if (bCheckEcmMode) {
             // TODO: expose this in telephony layer for SDK build
-            String inEcm = SystemProperties.get(TelephonyProperties.PROPERTY_INECM_MODE);
+            String inEcm = Utils.getSystemProp(TelephonyProperties.PROPERTY_INECM_MODE);
             if (Boolean.parseBoolean(inEcm)) {
                 try {
                     startActivityForResult(

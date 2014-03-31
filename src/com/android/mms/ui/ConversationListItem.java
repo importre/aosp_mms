@@ -61,15 +61,18 @@ public class ConversationListItem extends RelativeLayout implements Contact.Upda
     private Handler mHandler = new Handler();
 
     private Conversation mConversation;
+    private Context mContext;
 
     public static final StyleSpan STYLE_BOLD = new StyleSpan(Typeface.BOLD);
 
     public ConversationListItem(Context context) {
         super(context);
+        mContext = context;
     }
 
     public ConversationListItem(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mContext = context;
 
         if (sDefaultContactImage == null) {
             sDefaultContactImage = context.getResources().getDrawable(R.drawable.ic_contact_picture);
@@ -102,7 +105,7 @@ public class ConversationListItem extends RelativeLayout implements Contact.Upda
     }
 
     private CharSequence formatMessage() {
-        final int color = android.R.styleable.Theme_textColorSecondary;
+        final int color = android.R.color.secondary_text_dark;
         String from = mConversation.getRecipients().formatNames(", ");
 
         SpannableStringBuilder buf = new SpannableStringBuilder(from);

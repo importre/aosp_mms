@@ -22,9 +22,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.drm.DrmManagerClient;
-import android.location.Country;
-import android.location.CountryDetector;
-import android.location.CountryListener;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.provider.SearchRecentSuggestions;
@@ -49,9 +46,6 @@ public class MmsApp extends Application {
 
     private SearchRecentSuggestions mRecentSuggestions;
     private TelephonyManager mTelephonyManager;
-    private CountryDetector mCountryDetector;
-    private CountryListener mCountryListener;
-    private String mCountryIso;
     private static MmsApp sMmsApp = null;
     private PduLoaderManager mPduLoaderManager;
     private ThumbnailManager mThumbnailManager;
@@ -73,16 +67,6 @@ public class MmsApp extends Application {
 
         // Load the default preference values
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-
-        // Figure out the country *before* loading contacts and formatting numbers
-        mCountryDetector = (CountryDetector) getSystemService(Context.COUNTRY_DETECTOR);
-        mCountryListener = new CountryListener() {
-            @Override
-            public synchronized void onCountryDetected(Country country) {
-                mCountryIso = country.getCountryIso();
-            }
-        };
-        mCountryDetector.addCountryListener(mCountryListener, getMainLooper());
 
         Context context = getApplicationContext();
         mPduLoaderManager = new PduLoaderManager(context);
@@ -121,7 +105,6 @@ public class MmsApp extends Application {
 
     @Override
     public void onTerminate() {
-        mCountryDetector.removeCountryListener(mCountryListener);
     }
 
     @Override
@@ -172,13 +155,7 @@ public class MmsApp extends Application {
 
     // This function CAN return null.
     public String getCurrentCountryIso() {
-        if (mCountryIso == null) {
-            Country country = mCountryDetector.detectCountry();
-            if (country != null) {
-                mCountryIso = country.getCountryIso();
-            }
-        }
-        return mCountryIso;
+        return null;
     }
 
     public DrmManagerClient getDrmManagerClient() {

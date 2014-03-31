@@ -49,15 +49,18 @@ public class AudioAttachmentView extends LinearLayout implements
     private Uri mAudioUri;
     private MediaPlayer mMediaPlayer;
     private boolean mIsPlaying;
+    private Context mContext;
 
     public AudioAttachmentView(Context context) {
         super(context);
         mRes = context.getResources();
+        mContext = context;
     }
 
     public AudioAttachmentView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mRes = context.getResources();
+        mContext = context;
     }
 
     @Override

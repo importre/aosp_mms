@@ -67,7 +67,7 @@ public class MessageStatusService extends IntentService {
 
     private SmsMessage updateMessageStatus(Context context, Uri messageUri, byte[] pdu,
             String format) {
-        SmsMessage message = SmsMessage.createFromPdu(pdu, format);
+        SmsMessage message = SmsMessage.createFromPdu(pdu);
         if (message == null) {
             return null;
         }

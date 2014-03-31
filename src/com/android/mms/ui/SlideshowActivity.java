@@ -287,11 +287,11 @@ public class SlideshowActivity extends Activity implements EventListener {
             if (mMediaController != null) {
                 // Must set the seek bar change listener null, otherwise if we rotate it
                 // while tapping progress bar continuously, window will leak.
-                View seekBar = mMediaController
-                        .findViewById(com.android.internal.R.id.mediacontroller_progress);
-                if (seekBar instanceof SeekBar) {
-                    ((SeekBar)seekBar).setOnSeekBarChangeListener(null);
-                }
+//                View seekBar = mMediaController
+//                        .findViewById(com.android.internal.R.id.mediacontroller_progress);
+//                if (seekBar instanceof SeekBar) {
+//                    ((SeekBar)seekBar).setOnSeekBarChangeListener(null);
+//                }
                 // Must do this so we don't leak a window.
                 mMediaController.hide();
             }

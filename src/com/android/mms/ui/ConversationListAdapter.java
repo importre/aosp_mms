@@ -39,14 +39,20 @@ public class ConversationListAdapter extends CursorAdapter implements AbsListVie
 
     private final LayoutInflater mFactory;
     private OnContentChangedListener mOnContentChangedListener;
+    private Context mContext;
+    private Cursor mCursor;
 
     public ConversationListAdapter(Context context, Cursor cursor) {
         super(context, cursor, false /* auto-requery */);
         mFactory = LayoutInflater.from(context);
+        mContext = context;
+        mCursor = cursor;
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+        mContext = context;
+        mCursor = cursor;
         if (!(view instanceof ConversationListItem)) {
             Log.e(TAG, "Unexpected bound view: " + view);
             return;

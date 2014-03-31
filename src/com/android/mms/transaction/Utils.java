@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.telephony.ServiceState;
+import android.telephony.SmsMessage;
 import android.text.TextUtils;
 
 public class Utils {
@@ -136,5 +137,14 @@ public class Utils {
         }
 
         return serviceState;
+    }
+
+    public static boolean hasWrappedSmsMessage(SmsMessage sms) {
+        try {
+            Object obj = sms.getClass().getDeclaredField("mWrappedSmsMessage");
+            return null != obj;
+        } catch (Exception e) {
+        }
+        return false;
     }
 }

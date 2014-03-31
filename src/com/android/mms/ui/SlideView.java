@@ -72,6 +72,7 @@ public class SlideView extends AbsoluteLayout implements
     // Indicates whether the view is in MMS conformance mode.
     private boolean mConformanceMode;
     private MediaController mMediaController;
+    private Context mContext;
 
     MediaPlayer.OnPreparedListener mPreparedListener = new MediaPlayer.OnPreparedListener() {
         public void onPrepared(MediaPlayer mp) {
@@ -97,10 +98,12 @@ public class SlideView extends AbsoluteLayout implements
 
     public SlideView(Context context) {
         super(context);
+        mContext = context;
     }
 
     public SlideView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mContext = context;
     }
 
     public void setImage(String name, Bitmap bitmap) {

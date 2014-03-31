@@ -36,9 +36,9 @@ public class SmsStorageMonitor extends BroadcastReceiver {
             mNotificationManager =
                     (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         }
-        if (intent.getAction().equals(Intent.ACTION_DEVICE_STORAGE_FULL)) {
+        if (intent.getAction().equals("android.intent.action.DEVICE_STORAGE_FULL")) {
             notifyReachStorageLimited();
-        } else if (intent.getAction().equals(Intent.ACTION_DEVICE_STORAGE_NOT_FULL)) {
+        } else if (intent.getAction().equals("android.intent.action.DEVICE_STORAGE_NOT_FULL")) {
             cancelStorageLimitedWarning();
         }
     }

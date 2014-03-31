@@ -24,12 +24,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 
-import com.android.internal.app.AlertController;
-import com.android.mms.R;
-
 /**
  * This is the UI for telling the user about the storage limit setting.
  */
+// TODO: should replaced with custom alert
 public class WarnOfStorageLimitsActivity extends Activity implements DialogInterface,
                     DialogInterface.OnClickListener {
     /**
@@ -37,12 +35,12 @@ public class WarnOfStorageLimitsActivity extends Activity implements DialogInter
      *
      * @see #mAlertParams
      */
-    protected AlertController mAlert;
+//    protected AlertController mAlert;
 
     /**
      * The parameters for the alert.
      */
-    protected AlertController.AlertParams mAlertParams;
+//    protected AlertController.AlertParams mAlertParams;
 
     private static final String LOG_TAG = "WarnOfStorageLimitsActivity";
 
@@ -53,20 +51,20 @@ public class WarnOfStorageLimitsActivity extends Activity implements DialogInter
         // Can't set this theme in the manifest. The resource compiler complains the
         // resource is internal and not visible. Without setting this theme, the window
         // gets a double window outline.
-        this.setTheme(com.android.internal.R.style.Theme_Dialog_Alert);
+//        this.setTheme(com.android.internal.R.style.Theme_Dialog_Alert);
 
-        super.onCreate(savedInstanceState);
+//        super.onCreate(savedInstanceState);
 
-        mAlert = new AlertController(this, this, getWindow());
-        mAlertParams = new AlertController.AlertParams(this);
+//        mAlert = new AlertController(this, this, getWindow());
+//        mAlertParams = new AlertController.AlertParams(this);
 
         // Set up the "dialog"
-        final AlertController.AlertParams p = mAlertParams;
-        p.mMessage = getString(R.string.storage_limits_message);
-        p.mPositiveButtonText = getString(R.string.storage_limits_setting);
-        p.mNegativeButtonText = getString(R.string.storage_limits_setting_dismiss);
-        p.mPositiveButtonListener = this;
-        setupAlert();
+//        final AlertController.AlertParams p = mAlertParams;
+//        p.mMessage = getString(R.string.storage_limits_message);
+//        p.mPositiveButtonText = getString(R.string.storage_limits_setting);
+//        p.mNegativeButtonText = getString(R.string.storage_limits_setting_dismiss);
+//        p.mPositiveButtonListener = this;
+//        setupAlert();
     }
 
     /**
@@ -105,19 +103,19 @@ public class WarnOfStorageLimitsActivity extends Activity implements DialogInter
      * @see #mAlertParams
      */
     protected void setupAlert() {
-        mAlertParams.apply(mAlert);
-        mAlert.installContent();
+//        mAlertParams.apply(mAlert);
+//        mAlert.installContent();
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (mAlert.onKeyDown(keyCode, event)) return true;
+//        if (mAlert.onKeyDown(keyCode, event)) return true;
         return super.onKeyDown(keyCode, event);
     }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (mAlert.onKeyUp(keyCode, event)) return true;
+//        if (mAlert.onKeyUp(keyCode, event)) return true;
         return super.onKeyUp(keyCode, event);
     }
 

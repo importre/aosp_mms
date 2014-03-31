@@ -41,7 +41,7 @@ public final class PhoneNumberFormatter {
 
         @Override
         protected PhoneNumberFormattingTextWatcher doInBackground(Void... params) {
-            return new PhoneNumberFormattingTextWatcher(mCountryCode);
+            return new PhoneNumberFormattingTextWatcher();
         }
 
         @Override

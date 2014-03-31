@@ -154,9 +154,9 @@ public class SmsReceiverService extends Service {
                 return "SmsManager.RESULT_ERROR_NULL_PDU";
             case SmsManager.RESULT_ERROR_NO_SERVICE:
                 return "SmsManager.RESULT_ERROR_NO_SERVICE";
-            case SmsManager.RESULT_ERROR_LIMIT_EXCEEDED:
+            case 5: // SmsManager.RESULT_ERROR_LIMIT_EXCEEDED:
                 return "SmsManager.RESULT_ERROR_LIMIT_EXCEEDED";
-            case SmsManager.RESULT_ERROR_FDN_CHECK_FAILURE:
+            case 6: // SmsManager.RESULT_ERROR_FDN_CHECK_FAILURE:
                 return "SmsManager.RESULT_ERROR_FDN_CHECK_FAILURE";
             default:
                 return "Unknown error code";
@@ -343,7 +343,7 @@ public class SmsReceiverService extends Service {
                             Toast.LENGTH_SHORT).show();
                 }
             });
-        } else if (mResultCode == SmsManager.RESULT_ERROR_FDN_CHECK_FAILURE) {
+        } else if (mResultCode == 6) { //SmsManager.RESULT_ERROR_FDN_CHECK_FAILURE) {
             messageFailedToSend(uri, mResultCode);
             mToastHandler.post(new Runnable() {
                 public void run() {
@@ -499,7 +499,7 @@ public class SmsReceiverService extends Service {
             StringBuilder body = new StringBuilder();
             for (int i = 0; i < pduCount; i++) {
                 sms = msgs[i];
-                if (sms.mWrappedSmsMessage != null) {
+                if (Utils.hasWrappedSmsMessage(sms)) {
                     body.append(sms.getDisplayMessageBody());
                 }
             }
@@ -560,7 +560,7 @@ public class SmsReceiverService extends Service {
             StringBuilder body = new StringBuilder();
             for (int i = 0; i < pduCount; i++) {
                 sms = msgs[i];
-                if (sms.mWrappedSmsMessage != null) {
+                if (Utils.hasWrappedSmsMessage(sms)) {
                     body.append(sms.getDisplayMessageBody());
                 }
             }

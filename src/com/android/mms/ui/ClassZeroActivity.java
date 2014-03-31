@@ -90,7 +90,7 @@ public class ClassZeroActivity extends Activity {
     private boolean queueMsgFromIntent(Intent msgIntent) {
         byte[] pdu = msgIntent.getByteArrayExtra("pdu");
         String format = msgIntent.getStringExtra("format");
-        SmsMessage rawMessage = SmsMessage.createFromPdu(pdu, format);
+        SmsMessage rawMessage = SmsMessage.createFromPdu(pdu);
         String message = rawMessage.getMessageBody();
         if (TextUtils.isEmpty(message)) {
             if (mMessageQueue.size() == 0) {

@@ -107,9 +107,11 @@ public class MessageListItem extends LinearLayout implements
     private int mPosition;      // for debugging
     private ImageLoadedCallback mImageLoadedCallback;
     private boolean mMultiRecipients;
+    private Context mContext;
 
     public MessageListItem(Context context) {
         super(context);
+        mContext = context;
         mDefaultCountryIso = MmsApp.getApplication().getCurrentCountryIso();
 
         if (sDefaultContactImage == null) {
@@ -119,6 +121,7 @@ public class MessageListItem extends LinearLayout implements
 
     public MessageListItem(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mContext = context;
 
         int color = mContext.getResources().getColor(R.color.timestamp_color);
         mColorSpan = new ForegroundColorSpan(color);
@@ -521,9 +524,6 @@ public class MessageListItem extends LinearLayout implements
             fm.ascent -= 10;
         }
     };
-
-    TextAppearanceSpan mTextSmallSpan =
-        new TextAppearanceSpan(mContext, android.R.style.TextAppearance_Small);
 
     ForegroundColorSpan mColorSpan = null;  // set in ctor
 

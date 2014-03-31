@@ -41,12 +41,16 @@ public class VideoAttachmentView extends LinearLayout implements
 
     private ImageView mThumbnailView;
 
+    private Context mContext;
+
     public VideoAttachmentView(Context context) {
         super(context);
+        mContext = context;
     }
 
     public VideoAttachmentView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mContext = context;
     }
 
     @Override
