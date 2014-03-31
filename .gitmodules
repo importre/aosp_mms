@@ -7,9 +7,6 @@
 [submodule "deps/frameworks/opt/mms"]
 	path = deps/frameworks/opt/mms
 	url = https://github.com/importre/platform_frameworks_opt_mms
-[submodule "deps/frameworks/base"]
-	path = deps/frameworks/base
-	url = https://github.com/importre/platform_frameworks_base
 [submodule "deps/frameworks/opt/telephony"]
 	path = deps/frameworks/opt/telephony
 	url = https://github.com/importre/platform_frameworks_opt_telephony
