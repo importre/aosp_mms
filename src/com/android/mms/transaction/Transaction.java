@@ -25,6 +25,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 
+import com.android.mms.Utils;
 import com.android.mms.util.SendingProgressTokenManager;
 import com.google.android.mms.MmsException;
 

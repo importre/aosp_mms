@@ -36,7 +36,7 @@ import com.android.i18n.phonenumbers.PhoneNumberUtil;
 import com.android.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
 import com.android.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import com.android.i18n.phonenumbers.ShortNumberUtil;
-import com.android.mms.transaction.Utils;
+import com.android.mms.Utils;
 
 /**
  * Various utilities for dealing with phone number strings.

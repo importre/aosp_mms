@@ -30,6 +30,7 @@ import android.util.Log;
 
 import com.android.mms.LogTag;
 import com.android.mms.MmsApp;
+import com.android.mms.Utils;
 
 /**
  * MmsSystemEventReceiver receives the

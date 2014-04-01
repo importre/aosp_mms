@@ -1,5 +1,5 @@
 
-package com.android.mms.transaction;
+package com.android.mms;
 
 import java.lang.reflect.Method;
 import java.net.InetAddress;
