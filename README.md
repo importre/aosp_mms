@@ -6,7 +6,7 @@ Clone Project
 -------------
 
 ```sh
-$ git clone https://github.com/importre/platform_packages_apps_mms --recursive
+$ git clone https://github.com/importre/aosp_mms --recursive
 ```
 
 
